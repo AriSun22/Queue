@@ -1,3 +1,4 @@
+// Очередь.cpp: определяет точку входа для консольного приложения.
 /*!
 \file Sortir.cpp
 \brief Заголовочный файл с описанием классов
@@ -13,7 +14,6 @@
 
 using namespace std;
 
-int n; //размерность очереди
 
 struct Queue
 {
@@ -21,6 +21,8 @@ struct Queue
 	int first; //!< Переменная Первый (элемент)
 	int last; //!< Переменная Последний (элемент)
 	int count; //!< Переменная Итоговый (элемент)
+	int size; //!< Переменная Максимальный размер очереди
+	
 };
 
 /**
@@ -34,11 +36,13 @@ void Initial (int N, Queue *&p) //Инициализация очереди
 	p->first = 0;
 	p->last = 0;
 	p->count = 0;
+	p->size = N;
+
 }
 
 bool Full (Queue *&p)//Проверка на полноту
 {
-	if (p->count == n)
+	if (p->count == p->size)
 		return true;
 	else
 		return false;
@@ -62,7 +66,7 @@ void add (int a, Queue *&p)//Добавление в очередь
 	{
 		p->arr[p->last] = a;
 		p->last ++;
-		if (p->last == n)
+		if (p->last == p->size)
 		p->last = 0;
 		p->count ++;
 	}
@@ -79,7 +83,7 @@ void del (Queue *&p)//Удаление из очереди
 	{
 		p->arr[p->first] = 0;
 		p->first ++;
-		if (p->first == n)
+		if (p->first == p->size)
 		p->first = 0;
 		p->count --;
 	}
@@ -95,10 +99,11 @@ void Show(Queue *p) //Вывод очереди
 	int i,temp; 
 	for (i = p->first, temp=0; temp < p->count ; temp ++, i++) 
 	{ 
-		if (i == n) 
+		if (i == p->size) 
 			i = 0; 
 		cout << p->arr[i] << " "; 
 	}
+	cout << "\n";
 }
 
 //!Главная функция
@@ -108,20 +113,33 @@ int _tmain()
 
 	Queue *p;
 //	cout <<"Введите размер очереди: ";
+	
+	Initial (10, p);// Инициализируем очередь
+	int n = 0; //кол-во операций
 	cin >> n;
-	Initial (n, p);// Инициализируем очередь
 
 	int data;
-	for (int i = 0; i < n; i++)//заполняем ее
+	int num;
+	char op;
+	for (int i = 0; i < n; i++) //изначально, заполним список
 	{	
-	cin >> data;
-	add (data, p);
+		cin >> op;
+		if(op=='a')
+		{
+			cin >> data;
+			add(data, p);
+		}
+		else
+		if(op=='d')
+		{
+			del(p);
+		}
+		
+		
 	}
-	Show (p);
-	cout << endl;
-	cout<<endl; //"После удаления:" 
-	del (p);
-	Show (p);
+
+	Show(p);
+
 
 	system ("pause");
 	return 0;
